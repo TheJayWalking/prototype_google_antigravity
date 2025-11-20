@@ -221,24 +221,26 @@ function initLevel() {
 
     levelDisplay.innerText = `LEVEL ${currentLevel}`;
 
-    // Move Limits
-    if (currentLevel <= 5) movesLeft = 6;
-    else movesLeft = 8; // Medium & Hard
+    // Move Limits - 2 moves until level 10!
+    if (currentLevel <= 10) {
+        movesLeft = 2; // Levels 1-10: 2 moves only!
+    } else if (currentLevel <= 15) {
+        movesLeft = 3; // Levels 11-15: 3 moves
+    } else {
+        movesLeft = 4; // Levels 16+: 4 moves
+    }
 
     movesDisplay.innerText = movesLeft;
     movesDisplay.parentElement.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
     movesDisplay.parentElement.style.boxShadow = '0 8px 30px rgba(245, 87, 108, 0.5)';
 
-    // Dynamic Grid Size
+    // Dynamic Grid Size - Start at 3x2 for more fun
     if (currentLevel <= 5) {
-        GRID_COLS = 2;
-        GRID_ROWS = 2;
-    } else if (currentLevel <= 10) {
         GRID_COLS = 3;
         GRID_ROWS = 2;
     } else {
         GRID_COLS = 4;
-        GRID_ROWS = 3;
+        GRID_ROWS = 2; // Cap at 4x2 for responsiveness
     }
 
     // Update Canvas Size
@@ -247,22 +249,157 @@ function initLevel() {
 
     const totalTiles = GRID_COLS * GRID_ROWS;
 
-    // Define Tile Types
-    // Standard Platforms
-    const safeTile = { type: 'safe', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 50, y: 200, w: 100, h: 20 }], hazards: [], moving: [] };
-    const safeTile2 = { type: 'safe', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 180, y: 150, w: 100, h: 20 }], hazards: [], moving: [] };
+    // Define Tile Types - More Hazards for Fun! 🔥
+    const safeTile = {
+        type: 'safe',
+        platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 50, y: 200, w: 100, h: 20 }],
+        hazards: [
+            { x: 150, y: 290, w: 100, h: 10 },
+            { x: 0, y: 220, w: 40, h: 15 },
+            { x: 280, y: 220, w: 40, h: 15 }
+        ],
+        moving: []
+    };
 
-    // Hazards & Moving
-    const hazardTile = { type: 'hazard', platforms: [{ x: 0, y: 200, w: 50, h: 20 }, { x: 270, y: 200, w: 50, h: 20 }], hazards: [{ x: 0, y: 310, w: 320, h: 10 }], moving: [{ x: 100, y: 200, w: 80, h: 20, vx: 2, vy: 0, minX: 60, maxX: 260, minY: 200, maxY: 200 }] };
-    const movingTile = { type: 'moving', platforms: [{ x: 0, y: 300, w: 100, h: 20 }, { x: 220, y: 100, w: 100, h: 20 }], hazards: [{ x: 120, y: 310, w: 80, h: 10 }], moving: [{ x: 130, y: 250, w: 60, h: 20, vx: 0, vy: -2, minX: 130, maxX: 130, minY: 100, maxY: 280 }] };
-    const complexTile = { type: 'complex', platforms: [{ x: 0, y: 300, w: 80, h: 20 }, { x: 120, y: 300, w: 80, h: 20 }, { x: 240, y: 300, w: 80, h: 20 }], hazards: [{ x: 90, y: 150, w: 20, h: 100 }, { x: 210, y: 50, w: 20, h: 100 }], moving: [] };
-    const tunnelTile = { type: 'tunnel', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 0, y: 0, w: 320, h: 50 }], hazards: [{ x: 100, y: 290, w: 20, h: 10 }, { x: 200, y: 290, w: 20, h: 10 }], moving: [] };
+    const safeTile2 = {
+        type: 'safe',
+        platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 180, y: 150, w: 100, h: 20 }],
+        hazards: [
+            { x: 50, y: 290, w: 80, h: 10 },
+            { x: 100, y: 100, w: 60, h: 20 }
+        ],
+        moving: []
+    };
 
-    // Special Tiles
-    const startTileDef = { type: 'start', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 110, y: 200, w: 100, h: 20 }], hazards: [], moving: [] };
-    const goalTileDef = { type: 'goal', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 110, y: 200, w: 100, h: 20 }], hazards: [], moving: [] };
+    const hazardTile = {
+        type: 'hazard',
+        platforms: [{ x: 0, y: 200, w: 50, h: 20 }, { x: 270, y: 200, w: 50, h: 20 }],
+        hazards: [
+            { x: 0, y: 310, w: 320, h: 10 },
+            { x: 60, y: 150, w: 30, h: 80 },
+            { x: 230, y: 150, w: 30, h: 80 },
+            { x: 120, y: 250, w: 80, h: 15 }
+        ],
+        moving: [{ x: 100, y: 200, w: 70, h: 20, vx: 2.5, vy: 0, minX: 60, maxX: 250, minY: 200, maxY: 200 }]
+    };
 
-    // Connector Tiles (Guaranteed Solvability)
+    const movingTile = {
+        type: 'moving',
+        platforms: [{ x: 0, y: 300, w: 100, h: 20 }, { x: 220, y: 100, w: 100, h: 20 }],
+        hazards: [
+            { x: 120, y: 310, w: 80, h: 10 },
+            { x: 140, y: 200, w: 40, h: 20 }
+        ],
+        moving: [
+            { x: 130, y: 250, w: 60, h: 20, vx: 0, vy: -2, minX: 130, maxX: 130, minY: 100, maxY: 280 },
+            { x: 50, y: 180, w: 50, h: 15, vx: 2, vy: 0, minX: 50, maxX: 220, minY: 180, maxY: 180 }
+        ]
+    };
+
+    const complexTile = {
+        type: 'complex',
+        platforms: [{ x: 0, y: 300, w: 80, h: 20 }, { x: 120, y: 300, w: 80, h: 20 }, { x: 240, y: 300, w: 80, h: 20 }],
+        hazards: [
+            { x: 90, y: 150, w: 20, h: 100 },
+            { x: 210, y: 50, w: 20, h: 100 },
+            { x: 0, y: 250, w: 60, h: 15 },
+            { x: 260, y: 250, w: 60, h: 15 }
+        ],
+        moving: []
+    };
+
+    const tunnelTile = {
+        type: 'tunnel',
+        platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 0, y: 0, w: 320, h: 50 }],
+        hazards: [
+            { x: 80, y: 290, w: 30, h: 10 },
+            { x: 160, y: 290, w: 30, h: 10 },
+            { x: 240, y: 290, w: 30, h: 10 },
+            { x: 120, y: 150, w: 80, h: 20 }
+        ],
+        moving: []
+    };
+
+    const startTileDef = {
+        type: 'start',
+        platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 110, y: 200, w: 100, h: 20 }],
+        hazards: [],
+        moving: []
+    };
+
+    // 5 COMPLETELY DIFFERENT Goal Tile Layouts!
+    const goalVariations = [
+        // Variation 1: Classic center platform
+        {
+            type: 'goal',
+            platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 110, y: 200, w: 100, h: 20 }],
+            hazards: [
+                { x: 0, y: 290, w: 100, h: 10 },
+                { x: 220, y: 290, w: 100, h: 10 }
+            ],
+            moving: [
+                { x: 200, y: 250, w: 50, h: 15, vx: 0, vy: -2, minX: 200, maxX: 200, minY: 100, maxY: 270 }
+            ]
+        },
+        // Variation 2: Left-side platform
+        {
+            type: 'goal',
+            platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 20, y: 180, w: 90, h: 20 }],
+            hazards: [
+                { x: 120, y: 290, w: 200, h: 10 },
+                { x: 200, y: 100, w: 120, h: 25 }
+            ],
+            moving: [
+                { x: 150, y: 220, w: 60, h: 15, vx: 2, vy: 0, minX: 120, maxX: 240, minY: 220, maxY: 220 }
+            ]
+        },
+        // Variation 3: Right-side platform
+        {
+            type: 'goal',
+            platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 210, y: 150, w: 90, h: 20 }],
+            hazards: [
+                { x: 0, y: 290, w: 200, h: 10 },
+                { x: 0, y: 100, w: 120, h: 25 },
+                { x: 140, y: 200, w: 60, h: 20 }
+            ],
+            moving: []
+        },
+        // Variation 4: High platform
+        {
+            type: 'goal',
+            platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 120, y: 120, w: 80, h: 20 }],
+            hazards: [
+                { x: 50, y: 290, w: 100, h: 10 },
+                { x: 170, y: 290, w: 100, h: 10 },
+                { x: 0, y: 200, w: 100, h: 20 },
+                { x: 220, y: 200, w: 100, h: 20 }
+            ],
+            moving: [
+                { x: 40, y: 180, w: 50, h: 15, vx: 2, vy: -1, minX: 40, maxX: 230, minY: 140, maxY: 260 }
+            ]
+        },
+        // Variation 5: Multi-platform stairs
+        {
+            type: 'goal',
+            platforms: [
+                { x: 0, y: 300, w: 320, h: 20 },
+                { x: 10, y: 250, w: 70, h: 15 },
+                { x: 125, y: 200, w: 70, h: 15 },
+                { x: 240, y: 150, w: 70, h: 15 }
+            ],
+            hazards: [
+                { x: 90, y: 290, w: 140, h: 10 },
+                { x: 100, y: 100, w: 30, h: 80 }
+            ],
+            moving: [
+                { x: 180, y: 220, w: 40, h: 15, vx: -2, vy: 0, minX: 90, maxX: 220, minY: 220, maxY: 220 }
+            ]
+        }
+    ];
+
+    // Use level number to cycle through completely different layouts
+    const goalTileDef = goalVariations[(currentLevel - 1) % goalVariations.length];
+
     const connectorLow = { type: 'safe', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 0, y: 250, w: 100, h: 20 }, { x: 220, y: 250, w: 100, h: 20 }], hazards: [], moving: [] };
     const connectorHigh = { type: 'safe', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 110, y: 100, w: 100, h: 20 }], hazards: [], moving: [] };
     const connectorStairs = { type: 'safe', platforms: [{ x: 0, y: 300, w: 320, h: 20 }, { x: 0, y: 250, w: 80, h: 20 }, { x: 120, y: 180, w: 80, h: 20 }, { x: 240, y: 110, w: 80, h: 20 }], hazards: [], moving: [] };
@@ -271,11 +408,22 @@ function initLevel() {
 
     // Difficulty Progression
     if (currentLevel === 1) {
-        // Level 1: All Safe
-        // Need totalTiles - 2 (Start/Goal)
-        for (let i = 0; i < totalTiles - 2; i++) pool.push(i % 2 === 0 ? safeTile : safeTile2);
+        // Level 1: Still has hazards but easier mix
+        const dangerPool = [hazardTile, movingTile, complexTile, tunnelTile];
+        const safePool = [safeTile, safeTile2, connectorLow, connectorHigh, connectorStairs];
+
+        const slotsNeeded = totalTiles - 2;
+
+        // Level 1: More safe tiles but still some hazards!
+        for (let i = 0; i < slotsNeeded; i++) {
+            if (Math.random() > 0.6) { // 40% chance of danger (easier than other levels)
+                pool.push(dangerPool[Math.floor(Math.random() * dangerPool.length)]);
+            } else {
+                pool.push(safePool[Math.floor(Math.random() * safePool.length)]);
+            }
+        }
     } else {
-        // Level 2+: Mix of everything
+        // Level 2+: More challenging mix
         const dangerPool = [hazardTile, movingTile, complexTile, tunnelTile];
         const safePool = [safeTile, safeTile2, connectorLow, connectorHigh, connectorStairs];
 
@@ -297,9 +445,9 @@ function initLevel() {
             slotsFilled += 1;
         }
 
-        // Fill remaining slots
+        // Fill remaining slots - More hazards!
         for (let i = slotsFilled; i < slotsNeeded; i++) {
-            if (Math.random() > 0.4) {
+            if (Math.random() > 0.3) { // 70% chance of danger for more fun!
                 pool.push(dangerPool[Math.floor(Math.random() * dangerPool.length)]);
             } else {
                 pool.push(safePool[Math.floor(Math.random() * safePool.length)]);
@@ -307,7 +455,7 @@ function initLevel() {
         }
     }
 
-    // Smart Spawning: Ensure Start and Goal are far apart
+    // Smart Spawning: Ensure Start and Goal are FAR apart for challenge
     let finalLayouts = [];
     let isValid = false;
     let attempts = 0;
@@ -326,9 +474,8 @@ function initLevel() {
 
         const dist = Math.abs(startCol - goalCol) + Math.abs(startRow - goalRow);
 
-        // Min distance: 2 (prevents adjacency if possible, or at least direct neighbors)
-        // On 3x2, max dist is 2+1=3. 
-        if (dist >= 2) {
+        // Min distance: 3 for more challenge (was 2)
+        if (dist >= 3) {
             isValid = true;
         }
         attempts++;
