@@ -1,0 +1,189 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #1a1a2e, #0f0f1e);
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    padding-top: 0;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🐾</text></svg>') 8 8, auto;
+}
+
+/* Game Description Banner at Top */
+#game-description {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* Large Moves Display */
+#moves-display-container {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    padding: 20px 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(245, 87, 108, 0.5);
+    margin-bottom: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    min-width: 200px;
+}
+
+#moves-label {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    opacity: 0.9;
+}
+
+#moves-display {
+    font-size: 64px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    line-height: 1;
+}
+
+/* Pulse animation when moves change */
+@keyframes movePulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.move-used {
+    animation: movePulse 0.4s ease-out;
+}
+
+#ui-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+#level-display,
+#timer-display {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+#reset-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🐾</text></svg>') 8 8, pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#reset-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+#gameCanvas {
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    max-width: 100%;
+    height: auto;
+}
+
+/* Transition Overlay */
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+    opacity: 1;
+    transition: opacity 1s ease;
+}
+
+#transition-text {
+    font-size: 48px;
+    color: #fff;
+    letter-spacing: 5px;
+}
+
+/* Modal Styles */
+.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#game-over-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.modal-content {
+    background: #2a2a2a;
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid #ff4444;
+    box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+    text-align: center;
+}
+
+#game-over-title {
+    color: #ff4444;
+    font-size: 36px;
+    margin: 0 0 10px 0;
+}
+
+#continue-btn {
+    background: #ff4444;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🐾</text></svg>') 8 8, pointer;
+    font-weight: bold;
+}
+
+#continue-btn:hover {
+    background: #ff8888;
+}

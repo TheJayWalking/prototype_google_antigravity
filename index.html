@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platformer Jigsaw</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Game Description at Top -->
+    <div id="game-description">🎮 Drag tiles to build a path. Reach the Star! ⭐</div>
+
+    <!-- Moves Display - Large and Prominent -->
+    <div id="moves-display-container">
+        <div id="moves-label">MOVES LEFT</div>
+        <div id="moves-display">6</div>
+    </div>
+
+    <div id="ui-container">
+        <div id="level-display">LEVEL 1</div>
+        <div id="timer-display">Time: 0.00s</div>
+        <button id="reset-btn">Reset Level</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="hidden">
+        <div class="modal-content">
+            <h2 id="game-over-title">GAME OVER</h2>
+            <p id="game-over-msg">You hit a hazard!</p>
+            <button id="continue-btn">Continue</button>
+        </div>
+    </div>
+
+    <!-- Transition Overlay -->
+    <div id="transition-overlay" class="hidden">
+        <div id="transition-text">LEVEL 1 COMPLETE</div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
